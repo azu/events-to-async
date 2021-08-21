@@ -17,8 +17,11 @@ import { EventEmitter } from "events";
 import { on } from "events-to-async";
 
 const events = new EventEmitter();
+setTimeout(() => {
+    events.emit("change", 1);
+});
 const event = await once((handler) => event.once("change", handler));
-console.log(event);
+console.log(event); // => [1]
 ```
 
 on events
@@ -34,8 +37,13 @@ const asyncIterator = on((handler) => {
         event.off("change", handler); // call it when occur error 
     }
 });
+setTimeout(() => {
+    events.emit("change", 1);
+    events.emit("change", 2);
+    events.emit("change", 3);
+});
 for await(event of asyncIterator){
-    console.log(event);
+    console.log(event); // [1] → [2] → [3]
 }
 ```
 
