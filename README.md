@@ -167,7 +167,7 @@ const asyncIterator = on<[Event]>((handler) => {
     events.on(handler);
     return () => events.off(handler);
 });
-process.nextTick(() => {
+setTimeout(() => {
     events.emit({ key: "value" });
 });
 for await (const event of asyncIterator) {

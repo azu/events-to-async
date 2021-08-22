@@ -14,7 +14,7 @@ describe("events-to-async", () => {
                     events.off("up", handler);
                 };
             });
-            process.nextTick(() => {
+            setTimeout(() => {
                 events.emit("up", 1);
             });
             for await (const event of asyncIterator) {
@@ -116,7 +116,7 @@ describe("events-to-async", () => {
                     events.off("up", handler);
                 };
             });
-            process.nextTick(() => {
+            setTimeout(() => {
                 events.emit("up", 1);
             });
             const event = await promise;
@@ -147,7 +147,7 @@ describe("events-to-async", () => {
                 events.on(handler);
                 return () => events.off(handler);
             });
-            process.nextTick(() => {
+            setTimeout(() => {
                 events.emit({ key: "value" });
             });
             for await (const event of asyncIterator) {
