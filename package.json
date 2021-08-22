@@ -1,6 +1,6 @@
 {
   "name": "events-to-async",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Treat EventEmitter-like object using Async/Await, Async Iterator.",
   "homepage": "https://github.com/azu/events-to-async",
   "bugs": {
