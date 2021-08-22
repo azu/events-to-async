@@ -13,7 +13,7 @@ Install with [npm](https://www.npmjs.com/):
 
 ## Usage
 
-once an event
+once an event to Promise
 
 ```js
 import { EventEmitter } from "events";
@@ -27,7 +27,7 @@ const event = await once((handler) => event.once("change", handler));
 console.log(event); // => [1]
 ```
 
-on events
+on events to AsyncIterator
 
 ```js
 import { EventEmitter } from "events";
@@ -46,9 +46,38 @@ setTimeout(() => {
     events.emit("change", 2);
     events.emit("change", 3);
 });
-for await(event of asyncIterator) {
+for await(const event of asyncIterator) {
     console.log(event); // [1] → [2] → [3]
 }
+// Unreachable here
+```
+
+You can stop the async iterator by using `break;`
+
+```js
+import { EventEmitter } from "events";
+import { on } from "events-to-async";
+
+const events = new EventEmitter();
+const asyncIterator = on((handler) => {
+    events.on("change", handler); // Listen
+    return () => {
+        // This function is called on occuring error or `break;`
+        events.off("change", handler); // UnListen
+    }
+});
+setTimeout(() => {
+    events.emit("change", 1);
+    events.emit("change", 2);
+    events.emit("change", 3);
+});
+for await(const [num] of asyncIterator) {
+    console.log(num); // 1 → 2 → 3
+    if (num === 3) {
+        break;
+    }
+}
+console.log("4!!!"); 
 ```
 
 ### AbortController supports
@@ -89,9 +118,9 @@ import { on } from "events-to-async";
 const events = new EventEmitter();
 const abortController = new AbortController();
 const asyncIterator = on((handler) => {
-    event.on("change", handler);
+    events.on("change", handler);
     return () => {
-        event.off("change", handler);
+        events.off("change", handler);
     }
 }, { signal: abortController.signal });
 // Abort
@@ -111,8 +140,8 @@ import { on } from "events-to-async";
 const events = new EventEmitter();
 type Event = number;
 const asyncIterator = on<[Event]>((handler) => {
-    event.on("change", handler);
-    return () => event.off("change", handler)
+    events.on("change", handler);
+    return () => events.off("change", handler)
 });
 setTimeout(() => {
     events.emit("change", 1);

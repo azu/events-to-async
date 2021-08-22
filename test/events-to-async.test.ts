@@ -66,6 +66,30 @@ describe("events-to-async", () => {
             events.emit("up", 3);
             await assert.rejects(() => asyncIterator.next(), /Stop!/);
         });
+        it("call Iterable method: throws", async () => {
+            const events = new EventEmitter();
+            const asyncIterator = on((handler) => {
+                events.on("change", handler); // Listen
+                return () => {
+                    // This function is called on occuring error or `break;`
+                    events.off("change", handler); // UnListen
+                };
+            });
+            setTimeout(() => {
+                events.emit("change", 1);
+                events.emit("change", 2);
+                events.emit("change", 3);
+            });
+            const results: number[] = [];
+            for await (const [num] of asyncIterator) {
+                results.push(num); // 1 → 2 → 3
+                if (num === 3) {
+                    break;
+                }
+            }
+            results.push(4);
+            assert.deepStrictEqual(results, [1, 2, 3, 4]);
+        });
         it("should support AbortSignal", async () => {
             const events = new EventEmitter();
             const abortController = new AbortController();
