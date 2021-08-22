@@ -2,7 +2,8 @@
 
 Treat EventEmitter-like object using Async/Await and Async Iterator.
 
-Similar one of Node.js [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options) and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options), but it is generic.
+Similar one of Node.js [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options)
+and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options), but it is generic.
 
 ## Install
 
@@ -45,7 +46,7 @@ setTimeout(() => {
     events.emit("change", 2);
     events.emit("change", 3);
 });
-for await(event of asyncIterator){
+for await(event of asyncIterator) {
     console.log(event); // [1] → [2] → [3]
 }
 ```
@@ -56,10 +57,10 @@ You can cancel events using  [AbortController](https://developer.mozilla.org/en-
 
 - Browser: [Modern browsers](https://caniuse.com/abortcontroller) supports
 - Node.js 15+: supports
-  - Node.js 14 requires polyfills
-  - [abort-controller - npm](https://www.npmjs.com/package/abort-controller)
-  - [node-abort-controller - npm](https://www.npmjs.com/package/node-abort-controller)
-  
+    - Node.js 14 requires polyfills
+    - [abort-controller - npm](https://www.npmjs.com/package/abort-controller)
+    - [node-abort-controller - npm](https://www.npmjs.com/package/node-abort-controller)
+
 once an event with cancel
 
 ```js
@@ -97,6 +98,32 @@ const asyncIterator = on((handler) => {
 abortController.abort();
 ```
 
+### TypeScript supports
+
+`on<T>` and `once<T>` support generics that represent iterated value.
+
+:memo: `on<T>` and `once<T>` always return an array
+
+```ts
+import { EventEmitter } from "events";
+import { on } from "events-to-async";
+
+const events = new EventEmitter();
+type Event = { key: string };
+const asyncIterator = on<[Event]>((handler) => {
+    event.on("change", handler);
+    return () => event.off("change", handler)
+});
+setTimeout(() => {
+    events.emit("change", 1);
+    events.emit("change", 2);
+    events.emit("change", 3);
+});
+for await(event of asyncIterator) {
+    console.log(event); // [1] → [2] → [3]
+}
+```
+
 ### Yet another EventEmitter supports
 
 This library aim to support yet another `events` module like [eventmit](https://github.com/azu/eventmit).
@@ -108,15 +135,15 @@ import { on } from "events-to-async";
 type Event = { key: string };
 const events = eventmit<Event>();
 const asyncIterator = on<[Event]>((handler) => {
-  events.on(handler);
-  return () => events.off(handler);
+    events.on(handler);
+    return () => events.off(handler);
 });
 process.nextTick(() => {
-  events.emit({ key: "value" });
+    events.emit({ key: "value" });
 });
 for await (const event of asyncIterator) {
-  assert.deepStrictEqual(event, [{ key: "value" }]);
-  break;
+    assert.deepStrictEqual(event, [{ key: "value" }]);
+    break;
 }
 ```
 
