@@ -117,4 +117,5 @@ MIT © azu
 ## Acknowledgement
 
 - Node.js `event.on` and `event.once`: <https://github.com/nodejs/node/blob/master/lib/events.js>
+- [Async Iterable `EventEmitter.on(emitter, &quot;event&quot;)` · Issue #27847 · nodejs/node](https://github.com/nodejs/node/issues/27847)
 - [rolftimmermans/event-iterator: Convert event emitters and event targets to ES async iterators](https://github.com/rolftimmermans/event-iterator)
