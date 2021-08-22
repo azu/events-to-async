@@ -1,5 +1,4 @@
-export type UnHandler = () => unknown;
-
+export type EventToAsyncUnHandler = () => unknown;
 type Resolve<T> = (v: T) => void;
 type Reject = (e: Error) => void;
 type Deferred<T> = {
@@ -9,10 +8,9 @@ type Deferred<T> = {
 };
 
 function createDeferred<T = void>(): Deferred<T> {
-    let resolve: Resolve<T> | undefined, reject: Reject | undefined;
-
+    let resolve: Resolve<T> | undefined;
+    let reject: Reject | undefined;
     const promise = new Promise<T>((...args) => ([resolve, reject] = args));
-
     return Object.freeze(<Deferred<T>>{
         resolve: resolve!,
         reject: reject!,
@@ -20,10 +18,17 @@ function createDeferred<T = void>(): Deferred<T> {
     });
 }
 
-export function on<R extends [...any]>(onHandler: (...arg: any[]) => UnHandler): AsyncIterableIterator<R> {
+export type EventToAsyncOnOptions = {
+    signal?: AbortSignal;
+};
+
+export function on<R extends [...any]>(
+    onHandler: (...arg: any[]) => EventToAsyncUnHandler,
+    options?: EventToAsyncOnOptions
+): AsyncIterableIterator<R> {
     const comEvents: any[] = [];
     const unconsumedDeferred: Deferred<IteratorResult<any>>[] = [];
-    const unEvent = onHandler((...args: any[]) => {
+    const unHandle = onHandler((...args: any[]) => {
         const deferred = unconsumedDeferred.shift();
         if (deferred) {
             deferred.resolve({
@@ -34,7 +39,17 @@ export function on<R extends [...any]>(onHandler: (...arg: any[]) => UnHandler):
             comEvents.push(args);
         }
     });
+    const abortSignal = options?.signal;
     let finished = false;
+    let error: null | Error = null;
+    const offListener = () => {
+        unHandle?.();
+    };
+    const onAbort = () => {
+        abortSignal?.removeEventListener("abort", offListener);
+        error = new Error("Abort Error");
+    };
+    abortSignal?.addEventListener("abort", onAbort, { once: true });
     return {
         async next() {
             const lastEvent = comEvents.shift();
@@ -50,29 +65,33 @@ export function on<R extends [...any]>(onHandler: (...arg: any[]) => UnHandler):
                     done: true
                 };
             }
+            if (error) {
+                return Promise.reject(error);
+            }
             const deferred = createDeferred<IteratorResult<any>>();
             unconsumedDeferred.push(deferred);
             return deferred.promise;
         },
         async return() {
             finished = true;
+            offListener();
             for (const deferred of unconsumedDeferred) {
                 deferred.resolve({
                     value: undefined,
                     done: true
                 });
             }
-            unEvent?.();
             return {
-                done: true,
-                value: undefined
+                value: undefined,
+                done: true
             };
         },
-        async throw() {
-            unEvent?.();
+        async throw(thrownError: Error) {
+            error = thrownError;
+            offListener();
             return {
-                done: true,
-                value: undefined
+                value: undefined,
+                done: true
             };
         },
         [Symbol.asyncIterator]() {
@@ -81,13 +100,27 @@ export function on<R extends [...any]>(onHandler: (...arg: any[]) => UnHandler):
     };
 }
 
-export function once<R>(onHandler: (...arg: any[]) => UnHandler): Promise<R> {
+export type EventToAsyncOnceOptions = {
+    signal?: AbortSignal;
+};
+
+export function once<R extends [...any]>(
+    onHandler: (...arg: any[]) => EventToAsyncUnHandler,
+    options?: EventToAsyncOnceOptions
+): Promise<R> {
     const unconsumedDeferred = createDeferred<R>();
     const unEvent = onHandler((...args: any[]) => {
-        // @ts-ignore
-        unconsumedDeferred.resolve(args);
+        unconsumedDeferred.resolve(args as R);
     });
-    return unconsumedDeferred.promise.finally(() => {
+    const offListener = () => {
         unEvent?.();
+    };
+    const onAbort = () => {
+        options?.signal?.removeEventListener("abort", offListener);
+        unconsumedDeferred.reject(new Error("Abort Error"));
+    };
+    options?.signal?.addEventListener("abort", onAbort, { once: true });
+    return unconsumedDeferred.promise.finally(() => {
+        offListener();
     });
 }

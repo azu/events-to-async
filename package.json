@@ -57,6 +57,8 @@
   "devDependencies": {
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.6.1",
+    "abort-controller": "^3.0.0",
+    "eventmit": "^1.1.0",
     "lint-staged": "^11.1.2",
     "mocha": "^9.0.3",
     "prettier": "^2.3.2",
