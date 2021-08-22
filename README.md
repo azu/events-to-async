@@ -109,7 +109,7 @@ import { EventEmitter } from "events";
 import { on } from "events-to-async";
 
 const events = new EventEmitter();
-type Event = { key: string };
+type Event = number;
 const asyncIterator = on<[Event]>((handler) => {
     event.on("change", handler);
     return () => event.off("change", handler)
@@ -119,7 +119,7 @@ setTimeout(() => {
     events.emit("change", 2);
     events.emit("change", 3);
 });
-for await(event of asyncIterator) {
+for await(const event of asyncIterator) {
     console.log(event); // [1] → [2] → [3]
 }
 ```
