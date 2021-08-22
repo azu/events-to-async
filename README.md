@@ -33,7 +33,7 @@ const events = new EventEmitter();
 setTimeout(() => {
     events.emit("change", 1);
 });
-const event = await once((handler) => event.once("change", handler));
+const event = await once((handler) => events.once("change", handler));
 console.log(event); // => [1]
 ```
 
