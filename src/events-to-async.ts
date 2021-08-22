@@ -20,7 +20,7 @@ function createDeferred<T = void>(): Deferred<T> {
     });
 }
 
-export function on<R>(onHandler: (...arg: any[]) => UnHandler): AsyncIterableIterator<R> {
+export function on<R extends [...any]>(onHandler: (...arg: any[]) => UnHandler): AsyncIterableIterator<R> {
     const comEvents: any[] = [];
     const unconsumedDeferred: Deferred<IteratorResult<any>>[] = [];
     const unEvent = onHandler((...args: any[]) => {

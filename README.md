@@ -114,7 +114,7 @@ For bugs and feature requests, [please create an issue](https://github.com/azu/e
 
 MIT © azu
 
-## Acknowledgement
+## Related
 
 - Node.js `event.on` and `event.once`: <https://github.com/nodejs/node/blob/master/lib/events.js>
 - [Async Iterable `EventEmitter.on(emitter, &quot;event&quot;)` · Issue #27847 · nodejs/node](https://github.com/nodejs/node/issues/27847)
