@@ -10,7 +10,9 @@ and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter
 - events to Async Iterator
 - once event to a Promise
 - support EventEmitter-like libraries
-  - [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options) and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options) only support `events`
+    - [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options)
+      and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options) only
+      support `events`
 
 ## Install
 
@@ -215,6 +217,7 @@ MIT © azu
 
 ## Related
 
-- Node.js `event.on` and `event.once`: <https://github.com/nodejs/node/blob/master/lib/events.js>
+- Node.js [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options)
+  and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options): <https://github.com/nodejs/node/blob/master/lib/events.js>
 - [Async Iterable `EventEmitter.on(emitter, "event")` · Issue #27847 · nodejs/node](https://github.com/nodejs/node/issues/27847)
 - [rolftimmermans/event-iterator: Convert event emitters and event targets to ES async iterators](https://github.com/rolftimmermans/event-iterator)
