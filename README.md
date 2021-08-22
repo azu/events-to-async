@@ -13,7 +13,7 @@ and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter
     - [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options)
       and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options) only
       support `events`
-- LightWeight: less than [1kb](https://bundlephobia.com/package/events-to-async) (gzip)
+- LightWeight: [~1kb](https://bundlephobia.com/package/events-to-async) (gzip)
 
 ## Install
 
