@@ -5,6 +5,13 @@ Treat EventEmitter-like object using Async/Await and Async Iterator.
 Similar one of Node.js [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options)
 and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options), but it is generic.
 
+## Features
+
+- events to Async Iterator
+- once event to a Promise
+- support EventEmitter-like libraries
+  - [`events.on`](https://nodejs.org/api/events.html#events_events_on_emitter_eventname_options) and [`event.once`](https://nodejs.org/api/events.html#events_events_once_emitter_name_options) only support `events`
+
 ## Install
 
 Install with [npm](https://www.npmjs.com/):
