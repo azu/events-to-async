@@ -1,7 +1,6 @@
 import assert from "assert";
 import { EventEmitter } from "events";
 import { on, once } from "../src/events-to-async";
-import { AbortController } from "abort-controller";
 import { eventmit } from "eventmit";
 
 describe("events-to-async", () => {
