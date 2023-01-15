@@ -57,11 +57,11 @@
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
-    "eventmit": "^2.0.2",
+    "eventmit": "^2.0.4",
     "lint-staged": "^13.1.0",
     "mocha": "^10.2.0",
     "prettier": "^2.8.3",
-    "rimraf": "^4.0.4",
+    "rimraf": "^4.0.5",
     "ts-node": "^10.9.1",
     "ts-node-test-register": "^10.0.0",
     "typescript": "^4.9.4"
