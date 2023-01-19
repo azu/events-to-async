@@ -1,6 +1,6 @@
-import assert from "assert";
-import { EventEmitter } from "events";
-import { on, once } from "../src/events-to-async";
+import assert from "node:assert";
+import { EventEmitter } from "node:events";
+import { on, once } from "../src/events-to-async.js";
 import { eventmit } from "eventmit";
 describe("events-to-async", () => {
     describe("on", function () {

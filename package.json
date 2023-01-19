@@ -2,6 +2,14 @@
   "name": "events-to-async",
   "version": "1.0.1",
   "description": "Treat EventEmitter-like object using Async/Await, Async Iterator.",
+  "keywords": [
+    "node.js",
+    "events",
+    "event-emitter",
+    "promise",
+    "async",
+    "async-iterator"
+  ],
   "homepage": "https://github.com/azu/events-to-async",
   "bugs": {
     "url": "https://github.com/azu/events-to-async/issues"
@@ -13,17 +21,24 @@
   "license": "MIT",
   "author": "azu",
   "sideEffects": false,
-  "keywords": [
-    "node.js",
-    "events",
-    "event-emitter",
-    "promise",
-    "async",
-    "async-iterator"
-  ],
-  "main": "lib/events-to-async.js",
-  "module": "module/events-to-async.js",
-  "types": "lib/events-to-async.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./module/events-to-async.d.ts",
+        "default": "./module/events-to-async.js"
+      },
+      "require": {
+        "types": "./lib/events-to-async.d.ts",
+        "default": "./lib/events-to-async.js"
+      },
+      "default": "./lib/events-to-async.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/events-to-async.js",
+  "module": "./module/events-to-async.js",
+  "types": "./module/events-to-async.d.ts",
   "directories": {
     "lib": "lib",
     "test": "test"
@@ -35,13 +50,13 @@
     "src/"
   ],
   "scripts": {
-    "test": "mocha \"test/**/*.ts\"",
+    "build": "tsc -p . && tsc -p ./tsconfig.cjs.json && tsconfig-to-dual-package",
+    "clean": "git clean -fx lib/ module/",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "prepare": "git config --local core.hooksPath .githooks",
-    "build": "tsc -p . && tsc -p ./tsconfig.module.json",
-    "watch": "tsc -p . --watch",
-    "clean": "rimraf lib/ module/",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "mocha",
+    "watch": "tsc -p . --watch"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
@@ -63,7 +78,8 @@
     "prettier": "^2.8.3",
     "rimraf": "^4.0.5",
     "ts-node": "^10.9.1",
-    "ts-node-test-register": "^10.0.0",
+    "tsconfig-to-dual-package": "^1.1.0",
     "typescript": "^4.9.4"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }
