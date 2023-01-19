@@ -1,6 +1,6 @@
 {
   "name": "events-to-async",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Treat EventEmitter-like object using Async/Await, Async Iterator.",
   "keywords": [
     "node.js",
