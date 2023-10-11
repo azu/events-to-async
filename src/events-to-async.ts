@@ -42,12 +42,12 @@ export function on<R extends [...any]>(
     const abortSignal = options?.signal;
     let finished = false;
     let error: null | Error = null;
+    const onAbort = () => {
+        error = new Error("Abort Error");
+    };
     const offListener = () => {
         unHandle?.();
-    };
-    const onAbort = () => {
-        abortSignal?.removeEventListener("abort", offListener);
-        error = new Error("Abort Error");
+        abortSignal?.removeEventListener("abort", onAbort);
     };
     abortSignal?.addEventListener("abort", onAbort, { once: true });
     return {
@@ -112,12 +112,12 @@ export function once<R extends [...any]>(
     const unEvent = onHandler((...args: any[]) => {
         unconsumedDeferred.resolve(args as R);
     });
+    const onAbort = () => {
+        unconsumedDeferred.reject(new Error("Abort Error"));
+    };
     const offListener = () => {
         unEvent?.();
-    };
-    const onAbort = () => {
-        options?.signal?.removeEventListener("abort", offListener);
-        unconsumedDeferred.reject(new Error("Abort Error"));
+        options?.signal?.removeEventListener("abort", onAbort);
     };
     options?.signal?.addEventListener("abort", onAbort, { once: true });
     return unconsumedDeferred.promise.finally(() => {
